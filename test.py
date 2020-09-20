@@ -19,78 +19,61 @@ def login():
     browser.get(url)
     # Кликаем по кнопке "войти".
     login_button = wait.until(
-        ec.presence_of_element_located(
-            (By.CLASS_NAME, "home-header-btn")
-        )
+        ec.presence_of_element_located((By.CLASS_NAME, "home-header-btn"))
     )
     login_button.click()
 
     # Вводим регистрационные данные.
-    email_area = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "email")
-        )
-    )
+    email_area = wait.until(ec.presence_of_element_located((By.ID, "email")))
     password_area = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "password")
-        )
+        ec.presence_of_element_located((By.ID, "password"))
     )
     email_area.send_keys(login)
     password_area.send_keys(password)
     # Нажимаем кнопку "войти".
     submit_login_data_button = wait.until(
         ec.presence_of_element_located(
-            (
-                By.XPATH, "//*[@id='app']/div/form/div[2]/div/button"
-            )
+            (By.XPATH, "//*[@id='app']/div/form/div[2]/div/button")
         )
     )
     submit_login_data_button.click()
 
-    return str(datetime.datetime.now())+ "\nLogged in."
+    return str(datetime.datetime.now()) + "\nLogged in."
 
 
 def create_project():
     """Создание проекта со случайным названием.
-       Функция вовзращает имя созданного проекта."""
+    Функция вовзращает имя созданного проекта."""
 
     # Генерируем случайное название проекта.
     letters = string.ascii_letters
     digits = string.digits
 
-    project_name = "".join(
-        random.choice(letters + digits) for __ in range(12)
-    )
-
+    project_name = "".join(random.choice(letters + digits) for __ in range(12))
 
     # Нажимаем на кнопку создания проекта.
     add_project_button = wait.until(
         ec.presence_of_element_located(
-            (
-                By.XPATH, "//*[@id='app']/div/main/div/div[3]/div[1]/div[1]"
-            )
+            (By.XPATH, "//*[@id='app']/div/main/div/div[3]/div[1]/div[1]")
         )
     )
     add_project_button.click()
 
     name_project_window = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "nameproject")
-        )
+        ec.presence_of_element_located((By.ID, "nameproject"))
     )
-    
+
     name_project_window.send_keys(f"Test_{project_name}")
     name_project_window.send_keys(Keys.ENTER)
 
     time.sleep(1)
-    
+
     for a in browser.find_elements_by_tag_name("a"):
         link_href = a.get_attribute("href")
         if "/project/" in link_href and link_href not in projects_list:
             return link_href
 
-    
+
 def move_to_project():
     """Перемещаемся в случайный проект."""
     project_url = random.choice(projects_list)
@@ -98,7 +81,7 @@ def move_to_project():
 
     message = str(datetime.datetime.now()) + f"\nMoved to {project_url}"
     return message
-    
+
 
 def create_subproject(project_url):
     """Создаем подпроект внутри проекта."""
@@ -111,28 +94,23 @@ def create_subproject(project_url):
         random.choice(letters + digits) for __ in range(12)
     )
 
-
     # Нажимаем на кнопку создания проекта.
     add_subproject_button = wait.until(
         ec.presence_of_element_located(
-            (
-                By.XPATH, "//*[@id='app']/div/main/div/div[3]/div[1]/div[1]"
-            )
+            (By.XPATH, "//*[@id='app']/div/main/div/div[3]/div[1]/div[1]")
         )
     )
     add_subproject_button.click()
 
     name_subproject_window = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "namesubproject")
-        )
+        ec.presence_of_element_located((By.ID, "namesubproject"))
     )
-    
+
     name_subproject_window.send_keys(f"Test_{subproject_name}")
     name_subproject_window.send_keys(Keys.ENTER)
 
     time.sleep(1)
-    
+
     for a in browser.find_elements_by_tag_name("a"):
         link_href = a.get_attribute("href")
         if "/sub/" in link_href and link_href not in subprojects_list:
@@ -152,7 +130,10 @@ def start_search(subproject_url, query, location):
     browser.get(subproject_url)
     start_search_button = wait.until(
         ec.presence_of_element_located(
-            (By.XPATH, "//*[@id='app']/div/main/div[2]/div[1]/div/div[1]/div/i")
+            (
+                By.XPATH,
+                "//*[@id='app']/div/main/div[2]/div[1]/div/div[1]/div/i",
+            )
         )
     )
     start_search_button.click()
@@ -164,18 +145,12 @@ def start_search(subproject_url, query, location):
     )
     input_location.click()
     text_area = wait.until(
-        ec.presence_of_element_located(
-            (By.XPATH, "//*[@id='ajax']")
-        )
+        ec.presence_of_element_located((By.XPATH, "//*[@id='ajax']"))
     )
     text_area.send_keys(location)
     text_area.send_keys(Keys.ENTER)
 
-    input_query = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "query")
-        )
-    )
+    input_query = wait.until(ec.presence_of_element_located((By.ID, "query")))
     input_query.send_keys(query)
 
     start_button = wait.until(
@@ -193,16 +168,15 @@ def start_rsy(subproject_url, query):
     browser.get(subproject_url)
     start_search_button = wait.until(
         ec.presence_of_element_located(
-            (By.XPATH, "//*[@id='app']/div/main/div[2]/div[1]/div[1]/div/button/i")
+            (
+                By.XPATH,
+                "//*[@id='app']/div/main/div[2]/div[1]/div[1]/div/button/i",
+            )
         )
     )
     start_search_button.click()
 
-    input_query = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "query")
-        )
-    )
+    input_query = wait.until(ec.presence_of_element_located((By.ID, "query")))
     input_query.send_keys(query)
 
     start_button = wait.until(
@@ -220,7 +194,10 @@ def start_banner_search(subproject_url, query, location):
     browser.get(subproject_url)
     start_search_button = wait.until(
         ec.presence_of_element_located(
-            (By.XPATH, "//*[@id='app']/div/main/div[2]/div[1]/div/div[1]/div/i")
+            (
+                By.XPATH,
+                "//*[@id='app']/div/main/div[2]/div[1]/div/div[1]/div/i",
+            )
         )
     )
     start_search_button.click()
@@ -232,18 +209,12 @@ def start_banner_search(subproject_url, query, location):
     )
     input_location.click()
     text_area = wait.until(
-        ec.presence_of_element_located(
-            (By.XPATH, "//*[@id='ajax']")
-        )
+        ec.presence_of_element_located((By.XPATH, "//*[@id='ajax']"))
     )
     text_area.send_keys(location)
     text_area.send_keys(Keys.ENTER)
 
-    input_query = wait.until(
-        ec.presence_of_element_located(
-            (By.ID, "query")
-        )
-    )
+    input_query = wait.until(ec.presence_of_element_located((By.ID, "query")))
     input_query.send_keys(query)
 
     start_button = wait.until(
@@ -256,8 +227,10 @@ def start_banner_search(subproject_url, query, location):
     return message
 
 
+options = Options()
+options.headless = True
 browser = webdriver.Chrome(
-    executable_path="./webdriver/chromedriver"
+    executable_path="./webdriver/chromedriver", options=options
 )
 wait = WebDriverWait(browser, 10)
 
@@ -277,15 +250,9 @@ queries = [
     "микроволновка",
     "гамбургер",
     "пицца",
-    "реклама"
+    "реклама",
 ]
-locations = [
-    "москва",
-    "вологда",
-    "калуга",
-    "воркута",
-    "самара"
-]
+locations = ["москва", "вологда", "калуга", "воркута", "самара"]
 
 
 if __name__ == "__main__":
@@ -306,18 +273,26 @@ if __name__ == "__main__":
             )
 
         for s in subprojects_list:
-            print(start_search(s, random.choice(queries), random.choice(locations)))
+            print(
+                start_search(
+                    s, random.choice(queries), random.choice(locations)
+                )
+            )
             time.sleep(20)
-        time.sleep(25*60)
+        time.sleep(25 * 60)
 
         for s in subprojects_list[1:3]:
             print(start_rsy(s, random.choice(queries)))
             time.sleep(10)
-        time.sleep(60*60)
+        time.sleep(60 * 60)
 
         for i in range(30):
             for s in subprojects_list:
-                print(start_banner_search(s, random.choice(queries), random.choice(locations)))
+                print(
+                    start_banner_search(
+                        s, random.choice(queries), random.choice(locations)
+                    )
+                )
                 time.sleep(20)
 
     browser.quit()
